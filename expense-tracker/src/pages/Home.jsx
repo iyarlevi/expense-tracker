@@ -2,15 +2,23 @@ import { useState, useEffect } from "react";
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseList from "../components/ExpenseList";
 import ExpenseChart from "../components/ExpenseChart";
+import {
+  Container,
+  Typography,
+  Box,
+  Card,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 
 const Home = () => {
-  const [filterCategory, setFilterCategory] = useState("");
   const [expenses, setExpenses] = useState(
-    // Load the list from local storage
     () => JSON.parse(localStorage.getItem("expenses")) || []
   );
+  const [filterCategory, setFilterCategory] = useState("");
+  const [filterDate, setFilterDate] = useState("");
 
-  // Save the list from local storage
   useEffect(() => {
     localStorage.setItem("expenses", JSON.stringify(expenses));
   }, [expenses]);
@@ -19,31 +27,53 @@ const Home = () => {
   const deleteExpense = (id) =>
     setExpenses(expenses.filter((exp) => exp.id !== id));
 
-  // Filter the list base on the user filter input
   const filteredExpenses = expenses.filter((exp) => {
-    return !filterCategory || exp.category === filterCategory;
+    return (
+      (!filterCategory || exp.category === filterCategory) &&
+      (!filterDate || exp.date === filterDate)
+    );
   });
 
   return (
-    <div>
-      <h1>Expense Tracker</h1>
+    <Container maxWidth="md">
+      <Typography variant="h3" align="center" gutterBottom>
+        Expense Tracker
+      </Typography>
 
-      <div className="filter-section">
-        <select
-          value={filterCategory}
-          onChange={(e) => setFilterCategory(e.target.value)}
-        >
-          <option value="">All Categories</option>
-          <option value="Food">Food</option>
-          <option value="Transport">Transport</option>
-          <option value="Entertainment">Entertainment</option>
-        </select>
-      </div>
+      {/* Filters */}
+      <Card sx={{ padding: 2, marginBottom: 2 }}>
+        <Typography variant="h6" align="left" gutterBottom>
+          Filter
+        </Typography>
+        <Box display="flex" justifyContent="space-between">
+          <Select
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            displayEmpty
+            variant="outlined"
+            sx={{ width: "48%" }}
+          >
+            <MenuItem value="">All Category</MenuItem>
+            <MenuItem value="Fun">Fun</MenuItem>
+            <MenuItem value="Food">Food</MenuItem>
+            <MenuItem value="House">House</MenuItem>
+            <MenuItem value="Transport">Transport</MenuItem>
+          </Select>
+
+          <TextField
+            type="date"
+            value={filterDate}
+            onChange={(e) => setFilterDate(e.target.value)}
+            variant="outlined"
+            sx={{ width: "48%" }}
+          />
+        </Box>
+      </Card>
 
       <ExpenseForm addExpense={addExpense} />
       <ExpenseList expenses={filteredExpenses} deleteExpense={deleteExpense} />
       <ExpenseChart expenses={expenses} />
-    </div>
+    </Container>
   );
 };
 

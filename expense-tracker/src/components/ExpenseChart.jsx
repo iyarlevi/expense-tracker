@@ -1,15 +1,14 @@
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import { Card, Typography } from "@mui/material";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const ExpenseChart = ({ expenses }) => {
-  // Group expenses by category
   const categoryTotals = expenses.reduce((acc, expense) => {
     acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
     return acc;
   }, {});
 
-  // Convert data to Recharts format
   const chartData = Object.keys(categoryTotals).map((category, index) => ({
     name: category,
     value: categoryTotals[category],
@@ -17,12 +16,17 @@ const ExpenseChart = ({ expenses }) => {
   }));
 
   return (
-    <div>
-      <h2>Expense Breakdown</h2>
+    <Card sx={{ padding: 2, marginTop: 2 }}>
+      <Typography variant="h5" align="center" gutterBottom>
+        Expense Breakdown
+      </Typography>
+
       {chartData.length === 0 ? (
-        <p>No expenses to show</p>
+        <Typography color="textSecondary" align="center">
+          No expenses to show
+        </Typography>
       ) : (
-        <PieChart width={500} height={400}>
+        <PieChart width={800} height={300}>
           <Pie
             data={chartData}
             cx="50%"
@@ -42,7 +46,7 @@ const ExpenseChart = ({ expenses }) => {
           <Legend />
         </PieChart>
       )}
-    </div>
+    </Card>
   );
 };
 

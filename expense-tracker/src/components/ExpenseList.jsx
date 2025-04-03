@@ -1,20 +1,46 @@
-import ExpenseItem from "./ExpenseItem";
+import {
+  Card,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const ExpenseList = ({ expenses, deleteExpense }) => {
   return (
-    <div>
+    <Card sx={{ padding: 2, marginBottom: 2 }}>
+      <Typography variant="h5" gutterBottom>
+        Your Expenses
+      </Typography>
+
       {expenses.length === 0 ? (
-        <p>No expenses added yet</p>
+        <Typography color="textSecondary">No expenses yet.</Typography>
       ) : (
-        expenses.map((expense) => (
-          <ExpenseItem
-            key={expense.id}
-            expense={expense}
-            deleteExpense={deleteExpense}
-          />
-        ))
+        <List>
+          {expenses.map((expense) => (
+            <ListItem
+              key={expense.id}
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  color="error"
+                  onClick={() => deleteExpense(expense.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              }
+            >
+              <ListItemText
+                primary={`${expense.title} - $${expense.amount}`}
+                secondary={expense.category}
+              />
+            </ListItem>
+          ))}
+        </List>
       )}
-    </div>
+    </Card>
   );
 };
 
