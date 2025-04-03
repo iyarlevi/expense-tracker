@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseList from "../components/ExpenseList";
+import ExpenseChart from "../components/ExpenseChart";
 
 const Home = () => {
   const [filterCategory, setFilterCategory] = useState("");
@@ -41,6 +42,7 @@ const Home = () => {
 
       <ExpenseForm addExpense={addExpense} />
       <ExpenseList expenses={filteredExpenses} deleteExpense={deleteExpense} />
+      <ExpenseChart expenses={expenses} />
     </div>
   );
 };
